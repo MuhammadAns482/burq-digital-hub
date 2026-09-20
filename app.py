@@ -81,71 +81,169 @@ st.set_page_config(
     layout="wide",
 )
 
-# ── Custom CSS: Strict Logo Palette (Blue Headings, Pure White Inputs & Text) ─
+# ── Ultra-Premium SaaS Glassmorphism CSS (Burq Digital Hub Theme) ────────────
 BURQ_THEME_CSS = """
 <style>
-    body, .stApp {
-        background-color: #060B14 !important;
-        color: #FFFFFF !important;
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+    /* Global Body & Radial Mesh Background */
+    html, body, [class*="css"], .stApp {
+        font-family: 'Plus Jakarta Sans', sans-serif !important;
+        background-color: #030712 !important;
+        background-image: 
+            radial-gradient(at 15% 15%, rgba(0, 132, 255, 0.12) 0px, transparent 50%),
+            radial-gradient(at 85% 85%, rgba(0, 210, 255, 0.08) 0px, transparent 50%) !important;
+        color: #F8FAFC !important;
     }
+
+    /* Container Spacing */
     .main .block-container {
-        padding-top: 2rem;
-        max-width: 950px;
+        padding-top: 2rem !important;
+        padding-bottom: 4rem !important;
+        max-width: 980px !important;
     }
-    h1, h2, h3, h4, h5, h6 {
-        color: #0084FF !important;
+
+    /* Headings with Vibrant Gradient Glow */
+    h1 {
+        background: linear-gradient(135deg, #FFFFFF 30%, #00D2FF 100%);
+        -webkit-background-clip: text !important;
+        -webkit-text-fill-color: transparent !important;
         font-weight: 800 !important;
-    }
-    .sub-title {
-        color: #FFFFFF !important;
+        font-size: 2.3rem !important;
+        letter-spacing: -0.5px !important;
         text-align: center;
-        margin-bottom: 2rem;
-        font-size: 1.05rem;
     }
+
+    h2, h3, h4 {
+        color: #00D2FF !important;
+        font-weight: 700 !important;
+        letter-spacing: -0.3px !important;
+    }
+
+    .sub-title {
+        color: #94A3B8 !important;
+        text-align: center;
+        margin-bottom: 2.2rem;
+        font-size: 0.95rem;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        font-weight: 600;
+    }
+
     p, span, label, li, .stMarkdown {
-        color: #FFFFFF !important;
+        color: #E2E8F0 !important;
     }
-    input, textarea, [data-testid="stChatInput"] textarea {
-        background-color: #0C1524 !important;
+
+    /* Tabs Styling - Modern Segmented Control */
+    .stTabs [data-baseweb="tab-list"] {
+        background: rgba(15, 23, 42, 0.7) !important;
+        backdrop-filter: blur(10px) !important;
+        border: 1px solid rgba(255, 255, 255, 0.08) !important;
+        border-radius: 12px !important;
+        padding: 6px !important;
+        gap: 6px !important;
+        margin-bottom: 1.5rem !important;
+    }
+
+    .stTabs [data-baseweb="tab"] {
+        border-radius: 8px !important;
+        color: #94A3B8 !important;
+        font-weight: 600 !important;
+        padding: 10px 18px !important;
+        border: none !important;
+        transition: all 0.25s ease !important;
+    }
+
+    .stTabs [aria-selected="true"] {
+        background: linear-gradient(135deg, rgba(0, 132, 255, 0.25) 0%, rgba(0, 82, 204, 0.25) 100%) !important;
+        color: #00D2FF !important;
+        border: 1px solid rgba(0, 210, 255, 0.35) !important;
+        box-shadow: 0 4px 14px rgba(0, 132, 255, 0.2) !important;
+    }
+
+    /* Input Fields & Textareas */
+    input, textarea, select, [data-testid="stChatInput"] textarea {
+        background-color: rgba(9, 14, 26, 0.8) !important;
         color: #FFFFFF !important;
         -webkit-text-fill-color: #FFFFFF !important;
-        caret-color: #00D2FF !important;
-        border: 1.5px solid #0084FF !important;
-        border-radius: 8px !important;
-        font-size: 1rem !important;
+        border: 1px solid rgba(0, 132, 255, 0.3) !important;
+        border-radius: 10px !important;
+        padding: 12px 14px !important;
+        font-size: 0.95rem !important;
+        transition: all 0.25s ease !important;
     }
+
+    input:focus, textarea:focus {
+        border-color: #00D2FF !important;
+        box-shadow: 0 0 0 3px rgba(0, 132, 255, 0.3) !important;
+        background-color: #090E1A !important;
+    }
+
     input::placeholder, textarea::placeholder {
-        color: #7A8B9E !important;
-        -webkit-text-fill-color: #7A8B9E !important;
+        color: #64748B !important;
+        -webkit-text-fill-color: #64748B !important;
     }
-    .stButton>button {
+
+    /* High-End Buttons with Neon Glow Effect */
+    .stButton > button {
         width: 100%;
         background: linear-gradient(135deg, #0084FF 0%, #0052CC 100%) !important;
         color: #FFFFFF !important;
-        border: 1px solid #00D2FF !important;
-        border-radius: 8px !important;
+        border: 1px solid rgba(0, 210, 255, 0.4) !important;
+        border-radius: 10px !important;
         font-weight: 700 !important;
-        padding: 0.65rem !important;
+        font-size: 0.95rem !important;
+        padding: 0.75rem 1.5rem !important;
+        box-shadow: 0 4px 18px rgba(0, 132, 255, 0.3) !important;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
     }
-    .stButton>button:hover {
-        background: linear-gradient(135deg, #00A3FF 0%, #0066FF 100%) !important;
+
+    .stButton > button:hover {
+        background: linear-gradient(135deg, #0095FF 0%, #0066FF 100%) !important;
+        border-color: #00D2FF !important;
+        box-shadow: 0 6px 25px rgba(0, 210, 255, 0.5) !important;
+        transform: translateY(-2px);
     }
+
+    .stButton > button:active {
+        transform: translateY(0);
+    }
+
+    /* Premium Alert & Info Boxes */
+    [data-testid="stAlert"] {
+        background: rgba(13, 25, 48, 0.6) !important;
+        border: 1px solid rgba(0, 132, 255, 0.3) !important;
+        border-left: 4px solid #00D2FF !important;
+        border-radius: 10px !important;
+        backdrop-filter: blur(8px) !important;
+    }
+
     a {
         color: #00D2FF !important;
         font-weight: 600;
+        text-decoration: none;
     }
+    a:hover {
+        text-decoration: underline;
+    }
+
+    /* Divider */
     hr {
-        border-color: #0084FF !important;
+        border-color: rgba(255, 255, 255, 0.08) !important;
+        margin: 2rem 0 !important;
     }
 </style>
 """
 st.markdown(BURQ_THEME_CSS, unsafe_allow_html=True)
 
 # ── App Header with Centered Logo ────────────────────────────────────────────
-if Path("logo.png").exists():
+# Local ya cloud dono jagah logo load karne ka safe check
+logo_file = "logo.png" if Path("logo.png").exists() else ("logo.png.png" if Path("logo.png.png").exists() else None)
+
+if logo_file:
     c1, c2, c3 = st.columns([1.3, 1, 1.3])
     with c2:
-        st.image("logo.png", use_container_width=True)
+        st.image(logo_file, use_container_width=True)
 else:
     st.markdown("<div style='text-align: center; font-size: 3rem;'>⚡</div>", unsafe_allow_html=True)
 
