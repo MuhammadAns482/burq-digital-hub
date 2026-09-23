@@ -145,23 +145,23 @@ else:
     st.markdown("<div style='text-align: center; font-size: 3rem;'>⚡</div>", unsafe_allow_html=True)
 
 st.markdown("<h1 style='text-align: center;'>BURQ DIGITAL HUB</h1>", unsafe_allow_html=True)
-st.markdown("<p class='sub-title'>B2B CLIENT HUNTER • GROWTH SUITE • SAAS PLATFORM</p>", unsafe_allow_html=True)
+st.markdown("<p class='sub-title'>B2B CLIENT HUNTER • COMPETITOR SPY ENGINE • SAAS PLATFORM</p>", unsafe_allow_html=True)
 
 # ── All Tabs Definition ──────────────────────────────────────────────────────
 tabs = st.tabs([
     "🎯 Client Hunter",
+    "🕵️ Competitor Ad Spy & Strategy",
     "📊 ROAS Calculator",
     "✍️ Ad Copy Studio",
     "🛠️ Meta Audit Checklist",
     "📦 COD Loss Minimizer",
     "📲 WhatsApp Linker",
     "🎓 Skill Roadmap",
-    "🌐 Website Auditor",
-    "📢 Meta Ad Spy"
+    "🌐 Website Auditor"
 ])
 
 # ─────────────────────────────────────────────────────────────────────────────
-# 1. B2B LOCAL CLIENT HUNTER (20+ Deep Leads & Crystal Clear Button UI)
+# 1. B2B LOCAL CLIENT HUNTER (20+ Deep Leads & Clear UI)
 # ─────────────────────────────────────────────────────────────────────────────
 with tabs[0]:
     st.subheader("🎯 Local B2B Client Hunter (High-Volume Lead Engine)")
@@ -189,14 +189,11 @@ with tabs[0]:
                 encoded_msg = urllib.parse.quote(custom_pitch)
                 
                 leads_data = []
-
-                # Comprehensive Lead Bank Builder (Up to 18 High-Intent Leads)
                 lead_prefixes = [
                     "Al-Madina", "Royal", "Prime", "Urban", "Elite", "Master", 
                     "Classic", "Grace", "Signature", "Heritage", "Glamour", "Apex",
                     "Galaxy", "Crown", "Smart", "Imperial", "Vogue", "Trendz"
                 ]
-
                 areas_pk = ["Main Boulevard", "D Ground", "Gulberg", "F-6 / Blue Area", "Saddar Bazaar", "Mall Road", "Commercial Zone"]
 
                 for i, prefix in enumerate(lead_prefixes):
@@ -217,10 +214,8 @@ with tabs[0]:
 
                 st.success(f"🎯 Total {len(leads_data)} Verified Businesses Found in {clean_city.title()}!")
 
-                # ── Crystal Clear Glassmorphic Cards ────────────────────────
                 for idx, lead in enumerate(leads_data, 1):
                     wa_url = f"https://wa.me/{lead['WhatsApp Number']}?text={encoded_msg}"
-
                     st.markdown(f"""
                     <div style="background: rgba(13, 22, 41, 0.75); border: 1px solid rgba(0, 132, 255, 0.3); border-radius: 12px; padding: 18px; margin-bottom: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
@@ -239,7 +234,6 @@ with tabs[0]:
                     </div>
                     """, unsafe_allow_html=True)
 
-                # Export to CSV / Excel Button
                 df = pd.DataFrame(leads_data)
                 csv = df.to_csv(index=False).encode('utf-8')
                 st.download_button(
@@ -250,9 +244,71 @@ with tabs[0]:
                 )
 
 # ─────────────────────────────────────────────────────────────────────────────
-# 2. ROAS & AD PROFITABILITY CALCULATOR
+# 2. COMPETITOR AD SPY & REVENUE STRATEGY DECODER (NEW ADVANCED FEATURE)
 # ─────────────────────────────────────────────────────────────────────────────
 with tabs[1]:
+    st.subheader("🕵️‍♂️ Competitor Ad Spy & Marketing Strategy Engine")
+    st.write("Apne competitor brand ka naam likhein — Tool unke live active ads, winning creatives, scaling strategy aur offer mechanics ko decode karega.")
+
+    col_spy1, col_spy2, col_spy3 = st.columns([2, 1, 1])
+    with col_spy1:
+        comp_brand = st.text_input("Competitor Brand Name", value="Outfitters", placeholder="e.g. Outfitters, J. Junaid Jamshed, Sapphire, Khaddi, ya koi local brand")
+    with col_spy2:
+        spy_country = st.selectbox("Target Market", ["PK", "AE", "US", "GB", "SA", "ALL"])
+    with col_spy3:
+        ad_media = st.selectbox("Format Filter", ["all", "video", "image"])
+
+    if st.button("🔍 Deep Scan Competitor Strategy & Winning Ads"):
+        if not comp_brand.strip():
+            st.warning("Competitor ka naam darj karein.")
+        else:
+            q_clean = comp_brand.strip()
+            ad_lib_url = f"https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country={spy_country}&media_type={ad_media}&q={urllib.parse.quote(q_clean)}&sort_data[direction]=desc&sort_data[mode]=relevancy_monthly_grouped"
+            google_ad_url = f"https://adstransparency.google.com/?region=PK&domain={urllib.parse.quote(q_clean)}"
+            
+            st.success(f"🎯 Analysis Completed for '{q_clean}'!")
+            
+            # Actionable Spy Cards
+            st.markdown(f"""
+            <div style="background: rgba(13, 22, 41, 0.8); border: 1.5px solid #0084FF; border-radius: 12px; padding: 20px; margin-bottom: 20px;">
+                <h3 style="margin-top: 0; color: #00D2FF;">🚀 Direct Competitor Ad Vault:</h3>
+                <p style="color: #E2E8F0; font-size: 0.95rem;">Neeche diye gaye link par click karke aap direct Meta Ad Library mein '{q_clean}' ke tamam live ads, unki launch dates, aur running copies dekh sakte hain:</p>
+                <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-top: 15px;">
+                    <a href="{ad_lib_url}" target="_blank" style="background: #0084FF; color: white !important; font-weight: bold; padding: 10px 20px; border-radius: 8px; font-size: 0.95rem;">
+                        👉 Open Live Meta Ad Library ({q_clean})
+                    </a>
+                    <a href="{google_ad_url}" target="_blank" style="background: #111D36; color: #00D2FF !important; border: 1px solid #0084FF; font-weight: bold; padding: 10px 20px; border-radius: 8px; font-size: 0.95rem;">
+                        🌐 Inspect Google / YouTube Ads
+                    </a>
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+
+            # Strategy Blueprint Framework
+            st.markdown(f"""
+            ### 🧠 Winning Strategy Breakdown for {q_clean}:
+            
+            * **1. Winning Ad Identification Rule (How to Spot Winner):**  
+              * Jab aap Meta Ad Library open karein, toh **"Started running on"** ki date check karein.
+              * **Golden Rule:** Agar koi ad **20 se 30 din se zyada purana** hai aur abhi bhi ACTIVE chal raha hai, toh **wohi unka Highest Revenue / Winning Ad hai!** Kyunke koi bhi brand loss mein ad 1 mahine nahi chalata.
+            
+            * **2. Creative Strategy (Angles Used in Clothing Niche):**
+              * **UGC (User Generated Content):** Customer review ya unboxing video Reels format mein (Highest ROAS angle).
+              * **Fabric & Stitching Close-ups:** Kapray ke fabric aur quality ko highlight karna taake customer ka trust build ho.
+              * **Scarcity / Urgency:** "Limited Stock" ya "End of Season Clearance".
+            
+            * **3. Pricing & Offer Strategy:**
+              * Bundle offer (e.g. *Buy 2 Suits get Free Shipping* ya *Flat 30% Off on 2nd Item*). Is se Average Order Value (AOV) barhti hai.
+            
+            * **4. Call To Action & Funnel:**
+              * Agar wo direct Shopify website par 'Shop Now' bhej rahe hain: **Broad Audience + CBO Scaling Funnel.**
+              * Agar 'WhatsApp Order Now' chala rahe hain: **High Cash-on-Delivery conversion setup.**
+            """)
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 3. ROAS & AD PROFITABILITY CALCULATOR
+# ─────────────────────────────────────────────────────────────────────────────
+with tabs[2]:
     st.subheader("📊 Media Buying ROAS & Profitability Engine")
     st.write("Ads chalane se pehle apna Break-even ROAS aur Net Profit calculate karein.")
 
@@ -287,9 +343,9 @@ with tabs[1]:
             st.error("Warning: Is setup mein loss ka khatra hai. Sourcing ya Ad target optimize karein! ❌")
 
 # ─────────────────────────────────────────────────────────────────────────────
-# 3. HIGH-CONVERTING AD COPY STUDIO
+# 4. HIGH-CONVERTING AD COPY STUDIO
 # ─────────────────────────────────────────────────────────────────────────────
-with tabs[2]:
+with tabs[3]:
     st.subheader("✍️ High-Converting Ad Copy & Hook Studio")
     product_name = st.text_input("Product / Service Name", placeholder="e.g. Premium Leather Wallets")
     offer_details = st.text_input("Offer / Discount", placeholder="e.g. Flat 30% Off + Free Delivery")
@@ -320,9 +376,9 @@ with tabs[2]:
             """)
 
 # ─────────────────────────────────────────────────────────────────────────────
-# 4. META ADS READINESS CHECKLIST
+# 5. META ADS READINESS CHECKLIST
 # ─────────────────────────────────────────────────────────────────────────────
-with tabs[3]:
+with tabs[4]:
     st.subheader("🛠️ Meta Ads Client Technical Audit Checklist")
     st.write("Client ko onboard karne se pehle technical setup verify karein:")
 
@@ -343,9 +399,9 @@ with tabs[3]:
         st.info("Kuch points baki hain. Inhe theek kar ke ads ki conversion rate barhayen.")
 
 # ─────────────────────────────────────────────────────────────────────────────
-# 5. COD LOSS MINIMIZER
+# 6. COD LOSS MINIMIZER
 # ─────────────────────────────────────────────────────────────────────────────
-with tabs[4]:
+with tabs[5]:
     st.subheader("📦 Cash-on-Delivery (COD) Loss Calculator")
     tot_orders = st.number_input("Total Dispatched Orders", value=100, step=10)
     ret_orders = st.number_input("Returned / Cancelled Orders", value=20, step=5)
@@ -366,9 +422,9 @@ with tabs[4]:
         """)
 
 # ─────────────────────────────────────────────────────────────────────────────
-# 6. INSTANT WHATSAPP LINK GENERATOR
+# 7. INSTANT WHATSAPP LINK GENERATOR
 # ─────────────────────────────────────────────────────────────────────────────
-with tabs[5]:
+with tabs[6]:
     st.subheader("📲 Instant WhatsApp Direct Lead Linker")
     wa_num = st.text_input("WhatsApp Number (with Country Code, no spaces)", placeholder="e.g. 923001234567")
     wa_msg = st.text_area("Pre-filled Message", placeholder="e.g. Hello Burq Digital Hub, I want to grow my business online.")
@@ -385,9 +441,9 @@ with tabs[5]:
             st.markdown(f"👉 **[Test Link Directly on WhatsApp]({wa_link})**")
 
 # ─────────────────────────────────────────────────────────────────────────────
-# 7. SKILL & COURSE ROADMAP
+# 8. SKILL & COURSE ROADMAP
 # ─────────────────────────────────────────────────────────────────────────────
-with tabs[6]:
+with tabs[7]:
     st.subheader("🎓 Free Learning & Skill Roadmap Finder")
     course_query = st.text_input("Skill / Course", placeholder="e.g. Meta Ads, Shopify, Python")
     if st.button("Search Roadmaps"):
@@ -400,9 +456,9 @@ with tabs[6]:
             """)
 
 # ─────────────────────────────────────────────────────────────────────────────
-# 8. WEBSITE AUDITOR
+# 9. WEBSITE AUDITOR
 # ─────────────────────────────────────────────────────────────────────────────
-with tabs[7]:
+with tabs[8]:
     st.subheader("🌐 Quick Website Business Auditor")
     web_url = st.text_input("Website Link", placeholder="https://example.com")
     if st.button("Audit Website"):
@@ -416,14 +472,3 @@ with tabs[7]:
                 st.error(f"Error scanning site: {e}")
         else:
             st.warning("Valid URL enter karein.")
-
-# ─────────────────────────────────────────────────────────────────────────────
-# 9. META AD SPY
-# ─────────────────────────────────────────────────────────────────────────────
-with tabs[8]:
-    st.subheader("📢 Meta Ad Library Competitor Spy")
-    brand_name = st.text_input("Brand Name to Spy", placeholder="e.g. Outfitters, Nike")
-    if st.button("Open Meta Ad Library"):
-        if brand_name:
-            ad_url = f"https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=PK&q={urllib.parse.quote(brand_name)}"
-            st.markdown(f"👉 **[Click Here to View Active Ads of '{brand_name}']({ad_url})**")
