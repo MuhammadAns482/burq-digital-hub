@@ -17,7 +17,7 @@ st.set_page_config(
 # ── Ultra-Premium SaaS Glassmorphism CSS ────────────────────────────────────
 BURQ_THEME_CSS = """
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Nastaliq+Urdu:wght@400;700&display=swap');
 
     html, body, [class*="css"], .stApp {
         font-family: 'Plus Jakarta Sans', sans-serif !important;
@@ -29,17 +29,20 @@ BURQ_THEME_CSS = """
     }
 
     .main .block-container {
-        padding-top: 1.5rem !important;
+        padding-top: 1rem !important;
         padding-bottom: 3.5rem !important;
         max-width: 1050px !important;
     }
 
+    /* Headings */
     h1 {
         background: linear-gradient(135deg, #FFFFFF 30%, #00D2FF 100%);
         -webkit-background-clip: text !important;
         -webkit-text-fill-color: transparent !important;
         font-weight: 800 !important;
         text-align: center;
+        margin-top: 5px !important;
+        font-size: 2.1rem !important;
     }
 
     h2, h3, h4 {
@@ -50,8 +53,8 @@ BURQ_THEME_CSS = """
     .sub-title {
         color: #94A3B8 !important;
         text-align: center;
-        margin-bottom: 1.8rem;
-        font-size: 0.95rem;
+        margin-bottom: 1.5rem;
+        font-size: 0.88rem;
         letter-spacing: 1.5px;
         text-transform: uppercase;
         font-weight: 600;
@@ -61,31 +64,7 @@ BURQ_THEME_CSS = """
         color: #E2E8F0 !important;
     }
 
-    .stTabs [data-baseweb="tab-list"] {
-        background: rgba(15, 23, 42, 0.7) !important;
-        backdrop-filter: blur(10px) !important;
-        border: 1px solid rgba(255, 255, 255, 0.08) !important;
-        border-radius: 12px !important;
-        padding: 6px !important;
-        gap: 6px !important;
-        margin-bottom: 1.5rem !important;
-    }
-
-    .stTabs [data-baseweb="tab"] {
-        border-radius: 8px !important;
-        color: #94A3B8 !important;
-        font-weight: 600 !important;
-        padding: 8px 14px !important;
-        border: none !important;
-        font-size: 0.9rem !important;
-    }
-
-    .stTabs [aria-selected="true"] {
-        background: linear-gradient(135deg, rgba(0, 132, 255, 0.25) 0%, rgba(0, 82, 204, 0.25) 100%) !important;
-        color: #00D2FF !important;
-        border: 1px solid rgba(0, 210, 255, 0.35) !important;
-    }
-
+    /* Input Fields */
     input, textarea, select, [data-testid="stChatInput"] textarea {
         background-color: rgba(9, 14, 26, 0.8) !important;
         color: #FFFFFF !important;
@@ -100,6 +79,7 @@ BURQ_THEME_CSS = """
         box-shadow: 0 0 0 3px rgba(0, 132, 255, 0.3) !important;
     }
 
+    /* Action Buttons */
     .stButton > button {
         width: 100%;
         background: linear-gradient(135deg, #0084FF 0%, #0052CC 100%) !important;
@@ -109,11 +89,13 @@ BURQ_THEME_CSS = """
         font-weight: 700 !important;
         padding: 0.65rem 1.2rem !important;
         box-shadow: 0 4px 18px rgba(0, 132, 255, 0.3) !important;
+        transition: all 0.25s ease !important;
     }
 
     .stButton > button:hover {
         background: linear-gradient(135deg, #0095FF 0%, #0066FF 100%) !important;
         box-shadow: 0 6px 25px rgba(0, 210, 255, 0.5) !important;
+        transform: translateY(-1px);
     }
 
     [data-testid="stMetricValue"] {
@@ -135,35 +117,79 @@ BURQ_THEME_CSS = """
 """
 st.markdown(BURQ_THEME_CSS, unsafe_allow_html=True)
 
-# ── App Header ───────────────────────────────────────────────────────────────
+# ── App Header with Smaller Centered Logo ────────────────────────────────────
 logo_file = "logo.png" if Path("logo.png").exists() else ("logo.png.png" if Path("logo.png.png").exists() else None)
 if logo_file:
-    c1, c2, c3 = st.columns([1.5, 1, 1.5])
-    with c2:
-        st.image(logo_file, use_container_width=True)
+    # 5 columns layout makes the middle column specifically small and neat
+    c_left, c_mid_left, c_center, c_mid_right, c_right = st.columns([2.2, 1, 1.4, 1, 2.2])
+    with c_center:
+        st.image(logo_file, width=130)
 else:
-    st.markdown("<div style='text-align: center; font-size: 3rem;'>⚡</div>", unsafe_allow_html=True)
+    st.markdown("<div style='text-align: center; font-size: 2.2rem;'>⚡</div>", unsafe_allow_html=True)
 
 st.markdown("<h1 style='text-align: center;'>BURQ DIGITAL HUB</h1>", unsafe_allow_html=True)
 st.markdown("<p class='sub-title'>B2B CLIENT HUNTER • COMPETITOR SPY ENGINE • SAAS PLATFORM</p>", unsafe_allow_html=True)
 
-# ── All Tabs Definition ──────────────────────────────────────────────────────
-tabs = st.tabs([
-    "🎯 Client Hunter",
-    "🕵️ Competitor Ad Spy & Strategy",
-    "📊 ROAS Calculator",
-    "✍️ Ad Copy Studio",
-    "🛠️ Meta Audit Checklist",
-    "📦 COD Loss Minimizer",
-    "📲 WhatsApp Linker",
-    "🎓 Skill Roadmap",
-    "🌐 Website Auditor"
-])
+# ── 3-Column Modern Grid Tab Navigation ───────────────────────────────────────
+if "active_feature" not in st.session_state:
+    st.session_state.active_feature = "🎯 Client Hunter"
+
+features_list = [
+    "🎯 Client Hunter", "🕵️ Competitor Ad Spy", "📊 ROAS Calculator",
+    "✍️ Ad Copy Studio", "🛠️ Meta Audit Checklist", "📦 COD Loss Minimizer",
+    "📲 WhatsApp Linker", "🎓 Skill Roadmap", "🌐 Website Auditor"
+]
+
+st.markdown("<div style='margin-bottom: 8px; font-weight: 600; color: #94A3B8; font-size: 0.85rem;'>SELECT WORKSPACE MODULE:</div>", unsafe_allow_html=True)
+
+# Row 1 (3 tabs)
+row1_col1, row1_col2, row1_col3 = st.columns(3)
+with row1_col1:
+    if st.button("🎯 Client Hunter", use_container_width=True):
+        st.session_state.active_feature = "🎯 Client Hunter"
+with row1_col2:
+    if st.button("🕵️ Competitor Ad Spy", use_container_width=True):
+        st.session_state.active_feature = "🕵️ Competitor Ad Spy"
+with row1_col3:
+    if st.button("📊 ROAS Calculator", use_container_width=True):
+        st.session_state.active_feature = "📊 ROAS Calculator"
+
+# Row 2 (3 tabs)
+row2_col1, row2_col2, row2_col3 = st.columns(3)
+with row2_col1:
+    if st.button("✍️ Ad Copy Studio", use_container_width=True):
+        st.session_state.active_feature = "✍️ Ad Copy Studio"
+with row2_col2:
+    if st.button("🛠️ Meta Audit Checklist", use_container_width=True):
+        st.session_state.active_feature = "🛠️ Meta Audit Checklist"
+with row2_col3:
+    if st.button("📦 COD Loss Minimizer", use_container_width=True):
+        st.session_state.active_feature = "📦 COD Loss Minimizer"
+
+# Row 3 (3 tabs)
+row3_col1, row3_col2, row3_col3 = st.columns(3)
+with row3_col1:
+    if st.button("📲 WhatsApp Linker", use_container_width=True):
+        st.session_state.active_feature = "📲 WhatsApp Linker"
+with row3_col2:
+    if st.button("🎓 Skill Roadmap", use_container_width=True):
+        st.session_state.active_feature = "🎓 Skill Roadmap"
+with row3_col3:
+    if st.button("🌐 Website Auditor", use_container_width=True):
+        st.session_state.active_feature = "🌐 Website Auditor"
+
+# Visual indicator of selected active tool
+current_mod = st.session_state.active_feature
+st.markdown(f"""
+<div style='background: rgba(0, 132, 255, 0.15); border: 1px solid #0084FF; border-radius: 8px; padding: 7px 15px; margin: 15px 0 25px 0; text-align: center; color: #00D2FF; font-weight: 700; font-size: 0.95rem;'>
+    Active Module: {current_mod}
+</div>
+""", unsafe_allow_html=True)
 
 # ─────────────────────────────────────────────────────────────────────────────
-# 1. B2B LOCAL CLIENT HUNTER (20+ Deep Leads & Clear UI)
+# 1. B2B LOCAL CLIENT HUNTER
 # ─────────────────────────────────────────────────────────────────────────────
-with tabs[0]:
+if current_mod == "🎯 Client Hunter":
     st.subheader("🎯 Local B2B Client Hunter (High-Volume Lead Engine)")
     st.write("Niche aur City enter karein — Tool automatically 15 se 20+ active local businesses generate karega direct 1-click WhatsApp aur search links ke sath.")
 
@@ -244,15 +270,15 @@ with tabs[0]:
                 )
 
 # ─────────────────────────────────────────────────────────────────────────────
-# 2. COMPETITOR AD SPY & REVENUE STRATEGY DECODER (NEW ADVANCED FEATURE)
+# 2. COMPETITOR AD SPY & REVENUE STRATEGY DECODER
 # ─────────────────────────────────────────────────────────────────────────────
-with tabs[1]:
+elif current_mod == "🕵️ Competitor Ad Spy":
     st.subheader("🕵️‍♂️ Competitor Ad Spy & Marketing Strategy Engine")
     st.write("Apne competitor brand ka naam likhein — Tool unke live active ads, winning creatives, scaling strategy aur offer mechanics ko decode karega.")
 
     col_spy1, col_spy2, col_spy3 = st.columns([2, 1, 1])
     with col_spy1:
-        comp_brand = st.text_input("Competitor Brand Name", value="Outfitters", placeholder="e.g. Outfitters, J. Junaid Jamshed, Sapphire, Khaddi, ya koi local brand")
+        comp_brand = st.text_input("Competitor Brand Name", value="Outfitters", placeholder="e.g. Outfitters, Junaid Jamshed, Sapphire, ya koi local brand")
     with col_spy2:
         spy_country = st.selectbox("Target Market", ["PK", "AE", "US", "GB", "SA", "ALL"])
     with col_spy3:
@@ -268,11 +294,10 @@ with tabs[1]:
             
             st.success(f"🎯 Analysis Completed for '{q_clean}'!")
             
-            # Actionable Spy Cards
             st.markdown(f"""
             <div style="background: rgba(13, 22, 41, 0.8); border: 1.5px solid #0084FF; border-radius: 12px; padding: 20px; margin-bottom: 20px;">
                 <h3 style="margin-top: 0; color: #00D2FF;">🚀 Direct Competitor Ad Vault:</h3>
-                <p style="color: #E2E8F0; font-size: 0.95rem;">Neeche diye gaye link par click karke aap direct Meta Ad Library mein '{q_clean}' ke tamam live ads, unki launch dates, aur running copies dekh sakte hain:</p>
+                <p style="color: #E2E8F0; font-size: 0.95rem;">Neeche diye gaye link par click karke aap direct Meta Ad Library mein '{q_clean}' ke live ads, unki launch dates aur copies inspect karein:</p>
                 <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-top: 15px;">
                     <a href="{ad_lib_url}" target="_blank" style="background: #0084FF; color: white !important; font-weight: bold; padding: 10px 20px; border-radius: 8px; font-size: 0.95rem;">
                         👉 Open Live Meta Ad Library ({q_clean})
@@ -284,31 +309,17 @@ with tabs[1]:
             </div>
             """, unsafe_allow_html=True)
 
-            # Strategy Blueprint Framework
             st.markdown(f"""
             ### 🧠 Winning Strategy Breakdown for {q_clean}:
-            
-            * **1. Winning Ad Identification Rule (How to Spot Winner):**  
-              * Jab aap Meta Ad Library open karein, toh **"Started running on"** ki date check karein.
-              * **Golden Rule:** Agar koi ad **20 se 30 din se zyada purana** hai aur abhi bhi ACTIVE chal raha hai, toh **wohi unka Highest Revenue / Winning Ad hai!** Kyunke koi bhi brand loss mein ad 1 mahine nahi chalata.
-            
-            * **2. Creative Strategy (Angles Used in Clothing Niche):**
-              * **UGC (User Generated Content):** Customer review ya unboxing video Reels format mein (Highest ROAS angle).
-              * **Fabric & Stitching Close-ups:** Kapray ke fabric aur quality ko highlight karna taake customer ka trust build ho.
-              * **Scarcity / Urgency:** "Limited Stock" ya "End of Season Clearance".
-            
-            * **3. Pricing & Offer Strategy:**
-              * Bundle offer (e.g. *Buy 2 Suits get Free Shipping* ya *Flat 30% Off on 2nd Item*). Is se Average Order Value (AOV) barhti hai.
-            
-            * **4. Call To Action & Funnel:**
-              * Agar wo direct Shopify website par 'Shop Now' bhej rahe hain: **Broad Audience + CBO Scaling Funnel.**
-              * Agar 'WhatsApp Order Now' chala rahe hain: **High Cash-on-Delivery conversion setup.**
+            * **Winning Ad Formula:** Agar koi ad **20 se 30 din se zyada purana** hai aur abhi bhi ACTIVE chal raha hai, toh wohi unka Highest Revenue / Winning Ad hai.
+            * **Creative Format:** UGC / Reels video review formats highest conversion generate karte hain.
+            * **Offer Structure:** Bundle offers (e.g., Buy 2 get Free Delivery) se average cart size barhta hai.
             """)
 
 # ─────────────────────────────────────────────────────────────────────────────
 # 3. ROAS & AD PROFITABILITY CALCULATOR
 # ─────────────────────────────────────────────────────────────────────────────
-with tabs[2]:
+elif current_mod == "📊 ROAS Calculator":
     st.subheader("📊 Media Buying ROAS & Profitability Engine")
     st.write("Ads chalane se pehle apna Break-even ROAS aur Net Profit calculate karein.")
 
@@ -343,42 +354,105 @@ with tabs[2]:
             st.error("Warning: Is setup mein loss ka khatra hai. Sourcing ya Ad target optimize karein! ❌")
 
 # ─────────────────────────────────────────────────────────────────────────────
-# 4. HIGH-CONVERTING AD COPY STUDIO
+# 4. HIGH-CONVERTING AD COPY STUDIO (WITH URDU SCRIPT & ROMAN URDU)
 # ─────────────────────────────────────────────────────────────────────────────
-with tabs[3]:
+elif current_mod == "✍️ Ad Copy Studio":
     st.subheader("✍️ High-Converting Ad Copy & Hook Studio")
-    product_name = st.text_input("Product / Service Name", placeholder="e.g. Premium Leather Wallets")
-    offer_details = st.text_input("Offer / Discount", placeholder="e.g. Flat 30% Off + Free Delivery")
+    st.write("English, Roman Urdu ya Khaalis Urdu (Urdu Script) mein high-converting ad copies aur viral hooks generate karein.")
+
+    col_cp1, col_cp2 = st.columns(2)
+    with col_cp1:
+        product_name = st.text_input("Product / Service Name", value="Organic Hair Growth Oil", placeholder="e.g. Hair Oil, Desi Achaar, Leather Bags")
+    with col_cp2:
+        ad_lang = st.selectbox("Ad Copy Language", ["Roman Urdu (Popular)", "Urdu (اردو رسم الخط)", "English (Professional)"])
+
+    offer_details = st.text_input("Offer / Special Deal", value="Buy 1 Get 1 Free + Free Delivery", placeholder="e.g. Flat 30% Off, Buy 1 Get 1 Free, Free Shipping")
 
     if st.button("Generate Ad Copies & Hooks"):
         if not product_name.strip():
             st.warning("Product ka naam likhein.")
         else:
-            st.markdown(f"""
-            ### 🔥 Viral Hooks (For Reels & TikTok Ads):
-            1. *"Stop wasting money on cheap alternatives—yeh check karein!"*
-            2. *"{product_name} jo aapke daily lifestyle ko upgrade kar dega."*
-            3. *"Kya aap bhi is common issue se pareshan hain? Here is the exact fix."*
+            p_name = product_name.strip()
+            o_deal = offer_details.strip()
 
-            ---
-            ### 📜 Primary Ad Caption (Meta Ads):
-            Looking for the perfect **{product_name}**? ✨  
-            Aapki talash yahan khatam hoti hai! Premium quality, verified durability, aur ab mil raha hai special discount par.
+            if ad_lang == "Urdu (اردو رسم الخط)":
+                st.markdown(f"""
+                <div style="direction: rtl; text-align: right; background: rgba(13, 22, 41, 0.7); border: 1px solid #0084FF; border-radius: 12px; padding: 20px;">
+                    <h3 style="color: #00D2FF; margin-top: 0;">🔥 وائرل ہکس (ویڈیو اور ریلز کے پہلے 3 سیکنڈز کے لیے):</h3>
+                    <p style="font-size: 1.05rem; line-height: 1.8;">
+                    1. "کیا آپ بھی بالوں کے گرنے اور کمزوری سے پریشان ہیں؟ تو یہ ویڈیو آپ کے لیے ہے!"<br>
+                    2. "مارکیٹ کی کیمیکل والی مصنوعات چھوڑیں اور اپنائیں 100 فیصد قدرتی اور خالص <b>{p_name}</b>!"<br>
+                    3. "صرف 15 دنوں کے باقاعدہ استعمال سے واضح فرق خود محسوس کریں۔"
+                    </p>
+                    <hr style="border-color: rgba(0, 132, 255, 0.3);">
+                    <h3 style="color: #00D2FF;">📜 مکمل فیس بک ایڈ کیپشن (Ad Caption):</h3>
+                    <p style="font-size: 1.05rem; line-height: 1.8;">
+                    اب پائیں قدرتی اور دیرپا نتائج بغیر کسی سائیڈ ایفیکٹ کے! ✨<br><br>
+                    ہمارا خاص <b>{p_name}</b> خالص جڑی بوٹیوں سے تیار کیا گیا ہے جو آپ کی روزمرہ ضروریات کا بہترین حل ہے۔<br><br>
+                    ⚡ <b>خصوصی آفر:</b> {o_deal}<br>
+                    🚚 <b>پورے پاکستان میں کیش آن ڈیلیوری کی سہولت موجود ہے!</b><br><br>
+                    👉 ابھی آرڈر کرنے کے لیے نیچے دیے گئے لنک پر کلک کریں یا واٹس ایپ پر رابطہ کریں۔
+                    </p>
+                    <hr style="border-color: rgba(0, 132, 255, 0.3);">
+                    <h3 style="color: #00D2FF;">🎯 ہائی کلک ہیڈ لائنز (Headlines):</h3>
+                    <p style="font-size: 1.05rem;">
+                    • ⚡ {p_name} — محدود مدت کی رعایتی آفر! | کیش آن ڈیلیوری<br>
+                    • 🌿 100% خالص اور قدرتی فارمولا — ابھی آن لائن منگوائیں
+                    </p>
+                </div>
+                """, unsafe_allow_html=True)
 
-            ⚡ **Limited Time Offer:** {offer_details}  
-            🚚 **Cash On Delivery Available Nationwide**  
-            👉 Click 'Order Now' button to claim yours before stock runs out!
+            elif ad_lang == "Roman Urdu (Popular)":
+                st.markdown(f"""
+                ### 🔥 Viral Hooks (For Reels, TikTok & Shorts):
+                1. *"Agar aap bhi {p_name} ke behtareen results chahte hain, toh yeh video end tak dekhein!"*
+                2. *"Local market ke nakli aur mehnge alternatives ko chhodein — switch to 100% pure {p_name}."*
+                3. *"Kya aapka bhi yahi sab se bara masla hai? Here is the guaranteed organic fix!"*
 
-            ---
-            ### 🎯 High-CTR Headlines:
-            * `⚡ {product_name} - Flat Discount Today Only!`
-            * `🔥 Premium Quality Guaranteed | Cash On Delivery`
-            """)
+                ---
+                ### 📜 Primary Ad Caption (Meta / Facebook Ads):
+                Finally! Aapka favorite aur verified **{p_name}** ab available hai special discounted rates par! ✨  
+                
+                Khas formulation jo de authentic aur guaranteed results bina kisi pareshani ke.
+
+                ⚡ **Limited Time Deal:** {o_deal}  
+                🚚 **Cash On Delivery Available Nationwide (Poore Pakistan Mein)**  
+                📦 **Parcel Khol Kar Check Karne Ki Sahulat**  
+
+                👉 Abhi 'Shop Now' ya 'Send WhatsApp Message' par click karein aur apna order book karwayen!
+
+                ---
+                ### 🎯 High-CTR Headlines:
+                * `⚡ {p_name} - Flat Discount Today Only! | COD Available`
+                * `🌿 100% Pure & Authentic Quality - Claim Special Offer Now`
+                """)
+
+            else:
+                st.markdown(f"""
+                ### 🔥 Viral Hooks (English Video Ads):
+                1. *"Stop wasting your hard-earned money on low-grade alternatives—check this out!"*
+                2. *"Upgrade your lifestyle with the all-new premium {p_name}."*
+                3. *"Here is why thousands of customers are switching to our {p_name} this month."*
+
+                ---
+                ### 📜 Primary Ad Caption (English):
+                Experience the finest quality with **{p_name}**! ✨  
+                Engineered for maximum effectiveness and crafted to exceed your expectations.
+
+                ⚡ **Exclusive Offer:** {o_deal}  
+                🚚 **Cash On Delivery & Fast Shipping Nationwide**  
+                👉 Tap 'Order Now' below to secure your package before inventory runs out!
+
+                ---
+                ### 🎯 High-CTR Headlines:
+                * `⚡ {p_name} — Exclusive Deal | Limited Stock Available`
+                * `🔥 Premium Quality Guaranteed | Shop Now & Save Big`
+                """)
 
 # ─────────────────────────────────────────────────────────────────────────────
 # 5. META ADS READINESS CHECKLIST
 # ─────────────────────────────────────────────────────────────────────────────
-with tabs[4]:
+elif current_mod == "🛠️ Meta Audit Checklist":
     st.subheader("🛠️ Meta Ads Client Technical Audit Checklist")
     st.write("Client ko onboard karne se pehle technical setup verify karein:")
 
@@ -401,7 +475,7 @@ with tabs[4]:
 # ─────────────────────────────────────────────────────────────────────────────
 # 6. COD LOSS MINIMIZER
 # ─────────────────────────────────────────────────────────────────────────────
-with tabs[5]:
+elif current_mod == "📦 COD Loss Minimizer":
     st.subheader("📦 Cash-on-Delivery (COD) Loss Calculator")
     tot_orders = st.number_input("Total Dispatched Orders", value=100, step=10)
     ret_orders = st.number_input("Returned / Cancelled Orders", value=20, step=5)
@@ -424,7 +498,7 @@ with tabs[5]:
 # ─────────────────────────────────────────────────────────────────────────────
 # 7. INSTANT WHATSAPP LINK GENERATOR
 # ─────────────────────────────────────────────────────────────────────────────
-with tabs[6]:
+elif current_mod == "📲 WhatsApp Linker":
     st.subheader("📲 Instant WhatsApp Direct Lead Linker")
     wa_num = st.text_input("WhatsApp Number (with Country Code, no spaces)", placeholder="e.g. 923001234567")
     wa_msg = st.text_area("Pre-filled Message", placeholder="e.g. Hello Burq Digital Hub, I want to grow my business online.")
@@ -443,7 +517,7 @@ with tabs[6]:
 # ─────────────────────────────────────────────────────────────────────────────
 # 8. SKILL & COURSE ROADMAP
 # ─────────────────────────────────────────────────────────────────────────────
-with tabs[7]:
+elif current_mod == "🎓 Skill Roadmap":
     st.subheader("🎓 Free Learning & Skill Roadmap Finder")
     course_query = st.text_input("Skill / Course", placeholder="e.g. Meta Ads, Shopify, Python")
     if st.button("Search Roadmaps"):
@@ -456,11 +530,11 @@ with tabs[7]:
             """)
 
 # ─────────────────────────────────────────────────────────────────────────────
-# 9. WEBSITE AUDITOR
+# 9. WEBSITE AUDITOR (WITH www.yourclient.com PLACEHOLDER)
 # ─────────────────────────────────────────────────────────────────────────────
-with tabs[8]:
+elif current_mod == "🌐 Website Auditor":
     st.subheader("🌐 Quick Website Business Auditor")
-    web_url = st.text_input("Website Link", placeholder="https://example.com")
+    web_url = st.text_input("Website Link", placeholder="https://www.yourclient.com")
     if st.button("Audit Website"):
         if web_url.startswith("http"):
             try:
@@ -471,4 +545,4 @@ with tabs[8]:
             except Exception as e:
                 st.error(f"Error scanning site: {e}")
         else:
-            st.warning("Valid URL enter karein.")
+            st.warning("Valid URL enter karein (e.g. https://www.yourclient.com).")
