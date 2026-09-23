@@ -1,8 +1,10 @@
 from pathlib import Path
 import os
+import re
 import urllib.parse
 import requests
 from bs4 import BeautifulSoup
+import pandas as pd
 import streamlit as st
 
 # ── Page Configuration ───────────────────────────────────────────────────────
@@ -161,56 +163,117 @@ tabs = st.tabs([
 ])
 
 # ─────────────────────────────────────────────────────────────────────────────
-# 1. B2B LOCAL CLIENT HUNTER (WhatsApp & Social Extractor)
+# 1. B2B LOCAL CLIENT HUNTER (Lead Sheet with In-App WhatsApp & Social Links)
 # ─────────────────────────────────────────────────────────────────────────────
 with tabs[0]:
-    st.subheader("🎯 Local B2B Client Hunter (High-Ticket Lead Discovery)")
-    st.write("Apni digital marketing agency ke liye kisi bhi city ke local businesses, social media pages aur unke direct WhatsApp numbers dhoondein.")
+    st.subheader("🎯 Local B2B Client Hunter (Live Lead Sheet)")
+    st.write("Niche aur City likhein — Tool andar hi live businesses ki complete sheet aur direct 1-click WhatsApp buttons ready karega.")
 
     c_niche, c_city = st.columns(2)
     with c_niche:
-        niche_input = st.text_input("Business Niche / Category", placeholder="e.g. Clothing Brands, Real Estate, Dental Clinics, Cafes")
+        niche_input = st.text_input("Business Niche / Category", value="toys", placeholder="e.g. Toys, Clothing, Real Estate, Clinics")
     with c_city:
-        city_input = st.text_input("Target City", placeholder="e.g. Faisalabad, Lahore, Karachi, Islamabad")
+        city_input = st.text_input("Target City", value="Faisalabad", placeholder="e.g. Faisalabad, Lahore, Karachi")
 
-    if st.button("Hunt Local Businesses & Contacts"):
+    custom_pitch = st.text_area(
+        "WhatsApp Pre-filled Pitch Message (Direct Client Chat):",
+        value=f"Assalam-o-Alaikum! Main Burq Digital Hub ki team se hoon. Humne {city_input} mein aapka business dekha. Hum local businesses ko Meta Ads aur Google ke zariye monthly 2x to 3x orders aur high-paying clients la kar dete hain. Kya hum 5 minute call par discuss kar sakte hain?",
+        height=85
+    )
+
+    if st.button("🚀 Generate Live Client Lead Sheet"):
         if not niche_input.strip() or not city_input.strip():
             st.warning("Niche aur City dono likhein.")
         else:
-            q_niche = niche_input.strip()
-            q_city = city_input.strip()
-            
-            # Deep Search URLs
-            maps_url = f"https://www.google.com/maps/search/{urllib.parse.quote(q_niche + ' in ' + q_city)}"
-            insta_wa_url = f"https://www.google.com/search?q={urllib.parse.quote('site:instagram.com \"' + q_niche + '\" \"' + q_city + '\" (\"03\" OR \"+92\")')}"
-            fb_url = f"https://www.google.com/search?q={urllib.parse.quote('site:facebook.com \"' + q_niche + '\" \"' + q_city + '\"')}"
-            linkedin_url = f"https://www.google.com/search?q={urllib.parse.quote('site:linkedin.com/company \"' + q_niche + '\" \"' + q_city + '\"')}"
+            with st.spinner(f"Searching active {niche_input} businesses in {city_input}..."):
+                clean_niche = niche_input.strip()
+                clean_city = city_input.strip()
+                encoded_msg = urllib.parse.quote(custom_pitch)
+                
+                query_web = f"{clean_niche} in {clean_city} phone OR contact OR whatsapp"
+                leads_data = []
+                headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"}
+                
+                try:
+                    search_url = f"https://html.duckduckgo.com/html/?q={urllib.parse.quote(query_web)}"
+                    res = requests.get(search_url, headers=headers, timeout=12)
+                    soup = BeautifulSoup(res.text, "html.parser")
+                    results = soup.find_all("div", class_="result__body")
+                    
+                    phone_pattern = re.compile(r'(?:(?:\+92|0092|92)|0)?(3\d{2}[-\s]?\d{7})')
 
-            st.success(f"'{q_niche}' in '{q_city}' ke liye high-intent lead sources generate ho chuki hain! ✅")
-            
-            st.markdown(f"""
-            ### 📍 Direct Business Discovery Links:
-            1. 🗺️ **[Google Maps Active Businesses in {q_city}]({maps_url})**  
-               *(Tamam registered shops, phone numbers, customer reviews aur location yahan milegi)*
-            2. 📱 **[Instagram Profiles with Direct WhatsApp Numbers ({q_city})]({insta_wa_url})**  
-               *(Yeh link direct un brands ke Instagram pages nikalega jinki bio mein phone/WhatsApp likha hai)*
-            3. 👥 **[Facebook Business Pages in {q_city}]({fb_url})**  
-               *(Unke official pages aur direct chat options)*
-            4. 💼 **[LinkedIn Corporate Profiles]({linkedin_url})**  
-               *(Business owners aur decision makers se connect karne ke liye)*
+                    count = 0
+                    for r in results:
+                        link_tag = r.find("a", class_="result__url")
+                        snippet_tag = r.find("a", class_="result__snippet")
+                        raw_title = r.find("h2", class_="result__title")
+                        
+                        biz_name = raw_title.get_text(strip=True) if raw_title else "Local Business"
+                        raw_link = link_tag.get("href", "") if link_tag else ""
+                        snippet = snippet_tag.get_text(strip=True) if snippet_tag else ""
+                        
+                        actual_url = raw_link
+                        if "uddg=" in raw_link:
+                            parsed_actual = urllib.parse.parse_qs(urllib.parse.urlparse(raw_link).query).get("uddg")
+                            if parsed_actual:
+                                actual_url = parsed_actual[0]
 
-            ---
-            ### 💬 Ready-Made WhatsApp Outreach Script (Copy & Send):
-            ```text
-            Assalam-o-Alaikum! 
+                        full_text_to_scan = f"{biz_name} {snippet}"
+                        found_phone = phone_pattern.findall(full_text_to_scan)
+                        
+                        clean_wa_num = ""
+                        if found_phone:
+                            raw_ph = found_phone[0].replace("-", "").replace(" ", "").strip()
+                            clean_wa_num = "92" + raw_ph if raw_ph.startswith("3") else ("92" + raw_ph[1:] if raw_ph.startswith("03") else raw_ph)
 
-            Main Burq Digital Hub ki team se hoon. Humne {q_city} mein aapka brand collection dekha, zabardast work hai! 
+                        is_fb = "facebook.com" in actual_url.lower()
+                        is_insta = "instagram.com" in actual_url.lower()
+                        
+                        leads_data.append({
+                            "Business / Brand Name": biz_name[:45],
+                            "Website / Profile": actual_url if actual_url.startswith("http") else f"https://www.google.com/search?q={urllib.parse.quote(biz_name)}",
+                            "Platform": "Facebook" if is_fb else ("Instagram" if is_insta else "Website / Store"),
+                            "Detected Contact": clean_wa_num if clean_wa_num else "Search Profile",
+                            "Snippet": snippet[:100] + "..." if snippet else f"Local Store in {clean_city}"
+                        })
+                        count += 1
+                        if count >= 12:
+                            break
+                except Exception:
+                    pass
 
-            Lekin aapki online presence aur Meta Ads funnel optimize na hone ki wajah se aap monthly bohot se orders miss kar rahe hain. 
+                if not leads_data:
+                    st.warning("Koi direct public snippet data nahi mila. Query ko mazeed specific karein.")
+                else:
+                    st.success(f"🎯 Total {len(leads_data)} Businesses Found in {clean_city}!")
+                    
+                    st.markdown("### 📋 Interactive Client Lead Directory")
+                    
+                    for idx, lead in enumerate(leads_data, 1):
+                        wa_ready = lead["Detected Contact"] if lead["Detected Contact"] != "Search Profile" else None
+                        
+                        st.markdown(f"""
+                        <div style="background: rgba(13, 22, 41, 0.6); border: 1px solid rgba(0, 132, 255, 0.25); border-radius: 12px; padding: 15px; margin-bottom: 12px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <h4 style="margin: 0; color: #00D2FF;">#{idx} {lead['Business / Brand Name']}</h4>
+                                <span style="background: #1E2D4A; color: #94A3B8; padding: 4px 10px; border-radius: 6px; font-size: 0.8rem;">{lead['Platform']}</span>
+                            </div>
+                            <p style="color: #94A3B8; font-size: 0.88rem; margin: 8px 0;">{lead['Snippet']}</p>
+                            <div style="margin-top: 10px; display: flex; gap: 15px; flex-wrap: wrap;">
+                                <a href="{lead['Website / Profile']}" target="_blank" style="background: #0084FF; color: white; padding: 6px 14px; border-radius: 6px; text-decoration: none; font-size: 0.85rem; font-weight: bold;">🌐 Open Website / Page</a>
+                                {"<a href='https://wa.me/" + wa_ready + "?text=" + encoded_msg + "' target='_blank' style='background: #25D366; color: white; padding: 6px 14px; border-radius: 6px; text-decoration: none; font-size: 0.85rem; font-weight: bold;'>💬 Chat on WhatsApp (" + wa_ready + ")</a>" if wa_ready else "<span style='color: #64748B; font-size: 0.85rem; padding-top: 5px;'>WhatsApp: Check profile link</span>"}
+                            </div>
+                        </div>
+                        """, unsafe_allow_html=True)
 
-            Kya hum 5 minute ki quick call par discuss kar sakte hain ke aapke brand ki monthly sales ko 2x kaise kiya jaye?
-            ```
-            """)
+                    df = pd.DataFrame(leads_data)
+                    csv = df.to_csv(index=False).encode('utf-8')
+                    st.download_button(
+                        label="📥 Download Full Lead Sheet as CSV / Excel",
+                        data=csv,
+                        file_name=f"{clean_niche}_{clean_city}_leads.csv",
+                        mime="text/csv",
+                    )
 
 # ─────────────────────────────────────────────────────────────────────────────
 # 2. ROAS & AD PROFITABILITY CALCULATOR
@@ -348,7 +411,7 @@ with tabs[5]:
             st.markdown(f"👉 **[Test Link Directly on WhatsApp]({wa_link})**")
 
 # ─────────────────────────────────────────────────────────────────────────────
-# 7. SKILL & COURSE ROADMAP (Purana Feature)
+# 7. SKILL & COURSE ROADMAP
 # ─────────────────────────────────────────────────────────────────────────────
 with tabs[6]:
     st.subheader("🎓 Free Learning & Skill Roadmap Finder")
@@ -363,7 +426,7 @@ with tabs[6]:
             """)
 
 # ─────────────────────────────────────────────────────────────────────────────
-# 8. WEBSITE AUDITOR (Purana Feature)
+# 8. WEBSITE AUDITOR
 # ─────────────────────────────────────────────────────────────────────────────
 with tabs[7]:
     st.subheader("🌐 Quick Website Business Auditor")
@@ -381,7 +444,7 @@ with tabs[7]:
             st.warning("Valid URL enter karein.")
 
 # ─────────────────────────────────────────────────────────────────────────────
-# 9. META AD SPY (Purana Feature)
+# 9. META AD SPY
 # ─────────────────────────────────────────────────────────────────────────────
 with tabs[8]:
     st.subheader("📢 Meta Ad Library Competitor Spy")
